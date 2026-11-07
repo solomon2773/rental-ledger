@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Rental Ledger",
+    "slug": "rental-ledger",
+    "version": "0.1.0",
+    "scheme": "rentalledger",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rentalledger.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Rental Ledger photographs receipts to record expenses.",
+        "NSPhotoLibraryUsageDescription": "Rental Ledger lets you pick receipt photos from your library."
+      }
+    },
+    "android": {
+      "package": "com.rentalledger.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Rental Ledger photographs receipts to record expenses.",
+          "photosPermission": "Rental Ledger lets you pick receipt photos from your library."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

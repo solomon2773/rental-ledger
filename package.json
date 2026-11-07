@@ -1,0 +1,20 @@
+{
+  "name": "rental-ledger",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Snap a receipt, get a row in your property's Google Sheet. Expense + income tracking for short- and long-term rentals.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w apps/server",
+    "dev:mobile": "npm run start -w apps/mobile",
+    "build:shared": "npm run build -w packages/shared",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}
