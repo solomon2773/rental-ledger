@@ -14,7 +14,15 @@ export default function AuthCallback() {
   useEffect(() => {
     const token = typeof params.token === "string" ? params.token : undefined;
     if (token) {
-      signIn(token).then(() => router.replace("/(tabs)"));
+      signIn(token).then(() => {
+        // Keep the session token out of browser history on web.
+        try {
+          globalThis.history?.replaceState?.(null, "", "/");
+        } catch {
+          /* native */
+        }
+        router.replace("/(tabs)");
+      });
     } else {
       setError(typeof params.error === "string" ? `Google sign-in failed: ${params.error}` : "Missing token in callback URL.");
     }

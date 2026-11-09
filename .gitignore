@@ -17,3 +17,6 @@ apps/server/data/
 coverage/
 ios/
 android/
+deploy/.env
+deploy/server.env
+backups/

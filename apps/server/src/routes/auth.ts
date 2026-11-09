@@ -16,8 +16,8 @@ export function authRoutes(deps: Deps) {
    */
   app.get("/auth/google/start", (c) => {
     const redirect = c.req.query("redirect_uri") ?? "";
-    if (!config.ALLOWED_APP_REDIRECTS.some((p) => redirect.startsWith(p))) {
-      throw badRequest(`redirect_uri must start with one of: ${config.ALLOWED_APP_REDIRECTS.join(", ")}`);
+    if (!isAllowedRedirect(redirect, config.ALLOWED_APP_REDIRECTS)) {
+      throw badRequest(`redirect_uri must match one of: ${config.ALLOWED_APP_REDIRECTS.join(", ")}`);
     }
     const state = newToken();
     repo.saveOauthState(state, redirect);
@@ -65,7 +65,31 @@ export function authRoutes(deps: Deps) {
   return app;
 }
 
-/** Append query params, using the fragment for custom-scheme deep links so tokens never hit server logs. */
+/**
+ * http(s) entries must match the redirect's *origin* exactly (prefix matching would let
+ * https://app.example.com.evil.test through). Custom schemes (rentalledger://, exp://) match by scheme.
+ */
+export function isAllowedRedirect(redirect: string, allowed: string[]): boolean {
+  let url: URL;
+  try {
+    url = new URL(redirect);
+  } catch {
+    return false;
+  }
+  return allowed.some((entry) => {
+    if (/^https?:\/\//i.test(entry)) {
+      try {
+        return new URL(entry).origin === url.origin && url.origin !== "null";
+      } catch {
+        return false;
+      }
+    }
+    // custom scheme like "rentalledger://" or "exp://"
+    return url.protocol === entry.replace(/\/\/$/, "").toLowerCase();
+  });
+}
+
+/** Append query params to the app redirect. */
 function appendParams(base: string, params: Record<string, string>): string {
   const qs = new URLSearchParams(params).toString();
   const isCustomScheme = !/^https?:\/\//i.test(base);

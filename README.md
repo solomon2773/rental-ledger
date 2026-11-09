@@ -80,11 +80,21 @@ See `apps/server/.env.example` and `apps/mobile/.env.example`. Notable knobs:
 - `ALLOWED_APP_REDIRECTS`: which app URLs the login flow may bounce back to (`rentalledger://` for builds, `exp://` for Expo Go, `http://localhost:8081` for web).
 - `DRIVE_ROOT_FOLDER_NAME`: top-level Drive folder (default `Rental Ledger`).
 
+## Deploy
+
+A Docker Compose stack (Caddy with automatic HTTPS + the API) is in `deploy/`. For `rental-ledger.solomontsao.com` see [docs/deploy.md](docs/deploy.md); the short version on the host is:
+
+```bash
+cp deploy/.env.example deploy/.env && cp deploy/server.env.example deploy/server.env   # then fill in secrets
+docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d --build
+```
+
 ## Documentation
 
 - [docs/architecture.md](docs/architecture.md) – components, data flow, why Google Sheets stays the source of truth
 - [docs/sheet-layout.md](docs/sheet-layout.md) – every tab, column and formula the app writes
 - [docs/google-cloud-setup.md](docs/google-cloud-setup.md) – OAuth consent screen, scopes, redirect URIs
+- [docs/deploy.md](docs/deploy.md) – production deployment with Docker + Caddy
 - [docs/roadmap.md](docs/roadmap.md) – suggested features and the reasoning behind them
 
 ## Status

@@ -1,0 +1,23 @@
+# SITE_ADDRESS is the public hostname (Caddy obtains a Let's Encrypt certificate for it)
+# or ":8080" when running behind another reverse proxy that terminates TLS.
+{$SITE_ADDRESS}
+
+encode zstd gzip
+
+# API: /api/* -> Node server (prefix stripped, so the server sees /auth/..., /properties, ...)
+handle_path /api/* {
+	reverse_proxy server:8787
+}
+
+# Web app: Expo single-page export; unknown paths fall back to index.html for client routing.
+handle {
+	root * /srv/web
+	try_files {path} /index.html
+	file_server
+}
+
+header {
+	X-Content-Type-Options nosniff
+	Referrer-Policy strict-origin-when-cross-origin
+	-Server
+}

@@ -1,0 +1,13 @@
+# Override for hosts where another reverse proxy (nginx, Traefik, another Caddy) already
+# owns ports 80/443 and terminates TLS. Caddy then serves plain HTTP on 127.0.0.1:8080;
+# point your existing proxy at it:  rental-ledger.solomontsao.com -> http://127.0.0.1:8080
+#
+#   docker compose -f deploy/docker-compose.yml -f deploy/compose.behind-proxy.yml --env-file deploy/.env up -d --build
+#
+# Requires Docker Compose >= 2.24 for the !override tag.
+services:
+  web:
+    environment:
+      SITE_ADDRESS: ":8080"
+    ports: !override
+      - "127.0.0.1:8080:8080"
